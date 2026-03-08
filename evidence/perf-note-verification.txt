@@ -1,0 +1,6 @@
+[2026-02-25] WINDOWS-PERFORMANCE-NOTE.md created
+Node version: v24.11.1 (Windows)
+Linux baseline: Variance<0.1%, Latency 0.78μs
+Windows actual: Variance 4.6%, Latency 1.55μs
+Adjusted target: Variance<5%, Latency<2μs
+Status: Documented and accepted

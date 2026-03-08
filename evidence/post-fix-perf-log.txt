@@ -1,0 +1,22 @@
+[2026-02-25T05:20:24.210Z] Performance Benchmark Starting
+Config: 1000 latency samples, Zipf skew=1.01
+
+[2026-02-25T05:20:24.210Z] Running Latency Benchmark...
+Average Latency: 1.07 渭s
+P50: 0.50 渭s
+P90: 0.70 渭s
+P99: 9.00 渭s
+Max: 163.40 渭s
+
+[2026-02-25T05:20:24.210Z] Running Hit Rate Test...
+Hit Rate: 65.11%
+Hits: 61853, Misses: 33147
+
+[2026-02-25T05:20:24.210Z] Honesty Check:
+Previous Claim: 0.21渭s (C绾х敾楗?
+Current Reality: 1.07渭s (A绾ц瘹瀹?
+Deviation: 411% (explained in docs)
+
+[2026-02-25T05:20:24.210Z] Latency Check: FAIL (target: 0.8卤0.1渭s)
+Hit Rate Check: FAIL (target: 鈮?2%)
+Result: FAIL

@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for zstd-compression.ts</title>
+    <title>Code coverage report for simhash-math.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="prettify.css" />
     <link rel="stylesheet" href="base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="index.html">All files</a> zstd-compression.ts</h1>
+        <h1><a href="index.html">All files</a> simhash-math.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">93.54% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/36</span>
+                <span class='fraction'>58/62</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">73.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>11/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/8</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">94.73% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/35</span>
+                <span class='fraction'>54/57</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -235,7 +235,68 @@
 <a name='L170'></a><a href='#L170'>170</a>
 <a name='L171'></a><a href='#L171'>171</a>
 <a name='L172'></a><a href='#L172'>172</a>
-<a name='L173'></a><a href='#L173'>173</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a>
+<a name='L179'></a><a href='#L179'>179</a>
+<a name='L180'></a><a href='#L180'>180</a>
+<a name='L181'></a><a href='#L181'>181</a>
+<a name='L182'></a><a href='#L182'>182</a>
+<a name='L183'></a><a href='#L183'>183</a>
+<a name='L184'></a><a href='#L184'>184</a>
+<a name='L185'></a><a href='#L185'>185</a>
+<a name='L186'></a><a href='#L186'>186</a>
+<a name='L187'></a><a href='#L187'>187</a>
+<a name='L188'></a><a href='#L188'>188</a>
+<a name='L189'></a><a href='#L189'>189</a>
+<a name='L190'></a><a href='#L190'>190</a>
+<a name='L191'></a><a href='#L191'>191</a>
+<a name='L192'></a><a href='#L192'>192</a>
+<a name='L193'></a><a href='#L193'>193</a>
+<a name='L194'></a><a href='#L194'>194</a>
+<a name='L195'></a><a href='#L195'>195</a>
+<a name='L196'></a><a href='#L196'>196</a>
+<a name='L197'></a><a href='#L197'>197</a>
+<a name='L198'></a><a href='#L198'>198</a>
+<a name='L199'></a><a href='#L199'>199</a>
+<a name='L200'></a><a href='#L200'>200</a>
+<a name='L201'></a><a href='#L201'>201</a>
+<a name='L202'></a><a href='#L202'>202</a>
+<a name='L203'></a><a href='#L203'>203</a>
+<a name='L204'></a><a href='#L204'>204</a>
+<a name='L205'></a><a href='#L205'>205</a>
+<a name='L206'></a><a href='#L206'>206</a>
+<a name='L207'></a><a href='#L207'>207</a>
+<a name='L208'></a><a href='#L208'>208</a>
+<a name='L209'></a><a href='#L209'>209</a>
+<a name='L210'></a><a href='#L210'>210</a>
+<a name='L211'></a><a href='#L211'>211</a>
+<a name='L212'></a><a href='#L212'>212</a>
+<a name='L213'></a><a href='#L213'>213</a>
+<a name='L214'></a><a href='#L214'>214</a>
+<a name='L215'></a><a href='#L215'>215</a>
+<a name='L216'></a><a href='#L216'>216</a>
+<a name='L217'></a><a href='#L217'>217</a>
+<a name='L218'></a><a href='#L218'>218</a>
+<a name='L219'></a><a href='#L219'>219</a>
+<a name='L220'></a><a href='#L220'>220</a>
+<a name='L221'></a><a href='#L221'>221</a>
+<a name='L222'></a><a href='#L222'>222</a>
+<a name='L223'></a><a href='#L223'>223</a>
+<a name='L224'></a><a href='#L224'>224</a>
+<a name='L225'></a><a href='#L225'>225</a>
+<a name='L226'></a><a href='#L226'>226</a>
+<a name='L227'></a><a href='#L227'>227</a>
+<a name='L228'></a><a href='#L228'>228</a>
+<a name='L229'></a><a href='#L229'>229</a>
+<a name='L230'></a><a href='#L230'>230</a>
+<a name='L231'></a><a href='#L231'>231</a>
+<a name='L232'></a><a href='#L232'>232</a>
+<a name='L233'></a><a href='#L233'>233</a>
+<a name='L234'></a><a href='#L234'>234</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -244,6 +305,186 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1082x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -254,42 +495,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -297,288 +525,243 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
- * ZSTD Compression - Single Thread Implementation (Baseline)
- *
- * This module provides single-threaded ZSTD compression as the baseline
- * for parallel compression comparison.
- *
- * @module zstd-compression
- * @author Hajimi Team
+ * MATH-001: SimHash Mathematical Constraints
+ * 
+ * 解决候选检索爆炸问题（RISK-H-003）
+ * 实现高维向量（&gt;768维）的候选集大小限制
+ * 
+ * 数学原理：
+ * 1. 鸽巢原理：汉明距离 d &lt; threshold 时，至少存在 (segments - d) 个相同段
+ * 2. 概率上界：候选集大小期望 E[|C|] &lt;= N * P(碰撞)
+ * 3. 大数定律：当 N &gt; 100K 时，使用分段限制避免内存爆炸
+ * 
+ * @module simhash-math
+ * Wave 3: MATH-001 SimHash数学地狱
  */
 &nbsp;
-<span class="cstat-no" title="statement not covered" >import * as zlib from 'zlib';</span>
+import { createHash } from 'crypto';
+&nbsp;
+/** 64位掩码 */
+export const UINT64_MASK = 0xffffffffffffffffn;
+&nbsp;
+/** 汉明距离阈值 - MATH-001分析：h=3是最优选择 */
+export const HAMMING_THRESHOLD = 3;
+&nbsp;
+/** 默认文件级种子 */
+export const DEFAULT_FILE_SEED = 0x20250221;
+&nbsp;
+/** 候选集大小硬限制 - MATH-001核心参数 */
+export const CANDIDATE_LIMIT = 100;
+&nbsp;
+/** 高维向量阈值 - 超过此值启用限制 */
+export const HIGH_DIMENSION_THRESHOLD = 768;
+&nbsp;
+/** SimHash类型 */
+export type SimHashValue = bigint;
 &nbsp;
 /**
- * Compression options
+ * 计算32位整数的汉明权重（popcount）
+ * 使用SWAR算法
  */
-export interface CompressionOptions {
-  /** Compression level 1-9 (default: 3) */
-  level?: number;
-  /** Chunk size for parallel processing (default: 64KB) */
-  chunkSize?: number;
+function popcnt32(x: number): number {
+  x = x - ((x &gt;&gt; 1) &amp; 0x55555555);
+  x = (x &amp; 0x33333333) + ((x &gt;&gt; 2) &amp; 0x33333333);
+  x = (x + (x &gt;&gt; 4)) &amp; 0x0F0F0F0F;
+  x = x + (x &gt;&gt; 8);
+  x = x + (x &gt;&gt; 16);
+  return x &amp; 0x3F;
 }
 &nbsp;
 /**
- * Compression result with metadata
+ * 计算64位BigInt的汉明权重
+ * MATH-001：分段计算避免BigInt性能问题
  */
-export interface CompressionResult {
-  /** Compressed/decompressed data */
-  data: Buffer;
-  /** Compression mode used */
-  mode: 'single' | 'parallel';
-  /** Duration in milliseconds */
-  duration: number;
-  /** Original data size */
-  originalSize: number;
-  /** Result data size */
-  compressedSize: number;
-  /** Compression ratio */
-  ratio: number;
+export function popcnt64(value: SimHashValue): number {
+  const v = value &amp; UINT64_MASK;
+  const lo = Number(v &amp; 0xffffffffn);
+  const hi = Number(v &gt;&gt; 32n);
+  return popcnt32(lo) + popcnt32(hi);
 }
 &nbsp;
 /**
- * Single-threaded ZSTD compression using Node.js zlib
- * Uses deflate/gzip as fallback (since zstd-napi may not be available)
+ * 计算汉明距离
  */
-<span class="cstat-no" title="statement not covered" >export class Z</span>stdCompression {
-  private options: Required&lt;CompressionOptions&gt;;
+export function hammingDistance(a: SimHashValue, b: SimHashValue): number {
+  return popcnt64(a ^ b);
+}
 &nbsp;
-<span class="fstat-no" title="function not covered" >  constructor(o</span>ptions: CompressionOptions = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
-<span class="cstat-no" title="statement not covered" >    this.options = {</span>
-      level: options.level ?? 3,
-      chunkSize: options.chunkSize ?? 64 * 1024, // 64KB chunks
-    };
+/**
+ * 检查相似性
+ */
+export function isSimilar(a: SimHashValue, b: SimHashValue, threshold = HAMMING_THRESHOLD): boolean {
+  return hammingDistance(a, b) &lt; threshold;
+}
+&nbsp;
+/**
+ * MATH-001: 候选集大小限制器
+ * 
+ * 数学保证：
+ * - 当维度 &gt; 768 时，强制限制候选集大小
+ * - 使用优先级队列保留最优候选（汉明距离最小）
+ * - 保证返回的候选数 &lt;= limit
+ */
+export class CandidateLimiter {
+  private limit: number;
+  private highDimThreshold: number;
+&nbsp;
+  constructor(limit = CANDIDATE_LIMIT, highDimThreshold = HIGH_DIMENSION_THRESHOLD) {
+    this.limit = limit;
+    this.highDimThreshold = highDimThreshold;
   }
 &nbsp;
   /**
-   * Synchronous compression (single-thread)
-   * Uses gzip with max compression for CPU-intensive task
-   * @param data - Data to compress
-   * @returns Compressed data
-   * @throws Error if compression fails
+   * 是否需要限制候选集
+   * MATH-001：基于维度决定
    */
-<span class="fstat-no" title="function not covered" >  compressSync(</span>data: Buffer): Buffer {
-<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (data.length === 0) {</span>
-<span class="cstat-no" title="statement not covered" >      throw new Error('Cannot compress empty data');</span>
+  shouldLimit(dimensions: number): boolean {
+    return dimensions &gt; this.highDimThreshold;
+  }
+&nbsp;
+  /**
+   * 限制候选集大小
+   * 
+   * 算法：
+   * 1. 如果候选数 &lt;= limit，直接返回
+   * 2. 否则按汉明距离排序，取前 limit 个
+   * 3. 时间复杂度 O(N log N)，N为候选数
+   * 
+   * @param candidates - 候选列表 [(id, distance)]
+   * @returns 限制后的候选列表
+   */
+  limitCandidates&lt;T extends { id: number; distance: number }&gt;(candidates: T[]): T[] {
+    if (candidates.length &lt;= this.limit) {
+      return candidates;
     }
-    // Use gzip with configurable compression level
-<span class="cstat-no" title="statement not covered" >    return zlib.gzipSync(data, { level: this.options.level });</span>
+&nbsp;
+    // 按距离排序，取前limit个
+    return candidates
+      .sort((a, b) =&gt; a.distance - b.distance)
+      .slice(0, this.limit);
   }
 &nbsp;
   /**
-   * Synchronous decompression (single-thread)
-   * @param data - Data to decompress
-     * @returns Decompressed data
-   * @throws Error if decompression fails
+   * MATH-001: 冲突概率计算
+   * 
+   * 对于64位SimHash，假设均匀分布：
+   * - 两个随机simhash的汉明距离 &lt; 3 的概率：
+   * - P(d &lt; 3) = sum_{k=0}^{2} C(64,k) / 2^64
+   * - P(d &lt; 3) ≈ (1 + 64 + 2016) / 1.84e19 ≈ 1.13e-16
+   * 
+   * 对于N个向量，期望候选数：
+   * - E[|C|] = N * P(d &lt; 3)
+   * - 当 N = 1e8 (TB级), E[|C|] ≈ 1.13e-8 ≈ 0
+   * 
+   * 实际应用中，数据有相关性，概率会更高
+   * 因此需要硬限制防止最坏情况
    */
-<span class="fstat-no" title="function not covered" >  decompressSync(</span>data: Buffer): Buffer {
-<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (data.length === 0) {</span>
-<span class="cstat-no" title="statement not covered" >      throw new Error('Cannot decompress empty data');</span>
+  calculateCollisionProbability(dimensions: number, threshold: number): number {
+    let combinations = 0;
+    for (let k = 0; k &lt; threshold; k++) {
+      combinations += this.combinations(dimensions, k);
     }
-<span class="cstat-no" title="statement not covered" >    return zlib.gunzipSync(data);</span>
+    return combinations / Math.pow(2, dimensions);
   }
 &nbsp;
   /**
-   * Async compression with result metadata
-   * @param data - Data to compress
-   * @returns Compression result with metadata
+   * 计算组合数 C(n,k)
    */
-<span class="fstat-no" title="function not covered" >  async </span>compress(data: Buffer): Promise&lt;CompressionResult&gt; {
-    const start = <span class="cstat-no" title="statement not covered" >Date.now();</span>
-    const compressed = <span class="cstat-no" title="statement not covered" >this.compressSync(data);</span>
-    const duration = <span class="cstat-no" title="statement not covered" >Date.now() - start;</span>
-<span class="cstat-no" title="statement not covered" >    return {</span>
-      data: compressed,
-      mode: 'single',
-      duration,
-      originalSize: data.length,
-      compressedSize: compressed.length,
-      ratio: compressed.length / data.length,
-    };
-  }
-&nbsp;
-  /**
-   * Async decompression with result metadata
-   * @param data - Data to decompress
-   * @returns Decompression result with metadata
-   */
-<span class="fstat-no" title="function not covered" >  async </span>decompress(data: Buffer): Promise&lt;CompressionResult&gt; {
-    const start = <span class="cstat-no" title="statement not covered" >Date.now();</span>
-    const decompressed = <span class="cstat-no" title="statement not covered" >this.decompressSync(data);</span>
-    const duration = <span class="cstat-no" title="statement not covered" >Date.now() - start;</span>
-<span class="cstat-no" title="statement not covered" >    return {</span>
-      data: decompressed,
-      mode: 'single',
-      duration,
-      originalSize: data.length,
-      compressedSize: decompressed.length,
-      ratio: data.length / decompressed.length,
-    };
-  }
-&nbsp;
-  /**
-   * Get current options
-   * @returns Current compression options
-   */
-<span class="fstat-no" title="function not covered" >  getOptions(</span>): CompressionOptions {
-<span class="cstat-no" title="statement not covered" >    return { ...this.options };</span>
-  }
-&nbsp;
-  /**
-   * Calculate optimal chunk count based on data size and CPU cores
-   * @param dataSize - Size of data to compress
-   * @param cpuCores - Number of CPU cores (default: 4)
-   * @returns Optimal chunk count
-   */
-<span class="fstat-no" title="function not covered" >  calculateChunkCount(</span>dataSize: number, cpuCores = <span class="branch-0 cbranch-no" title="branch not covered" >4)</span>: number {
-    const minChunkSize = <span class="cstat-no" title="statement not covered" >this.options.chunkSize;</span>
-    const maxChunks = <span class="cstat-no" title="statement not covered" >Math.ceil(dataSize / minChunkSize);</span>
-<span class="cstat-no" title="statement not covered" >    return Math.min(maxChunks, cpuCores * 2); </span>// 2x cores for better utilization
-  }
-&nbsp;
-  /**
-   * Split data into chunks for parallel processing
-   * @param data - Data to split
-   * @param chunkCount - Number of chunks
-   * @returns Array of data chunks
-   */
-<span class="fstat-no" title="function not covered" >  splitIntoChunks(</span>data: Buffer, chunkCount: number): Buffer[] {
-<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (chunkCount &lt;= 0) {</span>
-<span class="cstat-no" title="statement not covered" >      throw new Error('chunkCount must be positive');</span>
-    }
-<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (data.length === 0) {</span>
-<span class="cstat-no" title="statement not covered" >      return [];</span>
-    }
+  private combinations(n: number, k: number): number {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (k &lt; 0 || k &gt; n) <span class="cstat-no" title="statement not covered" >return 0;</span>
+    if (k === 0 || k === n) return 1;
     
-    const chunks: Buffer[] = <span class="cstat-no" title="statement not covered" >[];</span>
-    const chunkSize = <span class="cstat-no" title="statement not covered" >Math.ceil(data.length / chunkCount);</span>
-    
-<span class="cstat-no" title="statement not covered" >    for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; chunkCount; i++) {</span>
-      const start = <span class="cstat-no" title="statement not covered" >i * chunkSize;</span>
-      const end = <span class="cstat-no" title="statement not covered" >Math.min(start + chunkSize, data.length);</span>
-<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (start &lt; data.length) {</span>
-<span class="cstat-no" title="statement not covered" >        chunks.push(data.subarray(start, end));</span>
+    let result = 1;
+    for (let i = 0; i &lt; k; i++) {
+      result = result * (n - i) / (i + 1);
+    }
+    return Math.round(result);
+  }
+&nbsp;
+  /**
+   * 获取限制参数
+   */
+  getConfig(): { limit: number; highDimThreshold: number } {
+    return { limit: this.limit, highDimThreshold: this.highDimThreshold };
+  }
+}
+&nbsp;
+/**
+ * MATH-001: 溢出保护计算器
+ * 
+ * 防止高维场景下的数值溢出
+ */
+export class OverflowProtectedCalculator {
+  private maxSafeValue: bigint;
+&nbsp;
+  constructor() {
+    this.maxSafeValue = BigInt(Number.MAX_SAFE_INTEGER);
+  }
+&nbsp;
+  /**
+   * 安全的BigInt乘法
+   * 检测溢出并返回上限值
+   */
+  safeMultiply(a: bigint, b: bigint): bigint {
+    try {
+      const result = a * b;
+      // 检查结果是否溢出（简单启发式）
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (result &lt; 0n) {
+<span class="cstat-no" title="statement not covered" >        return this.maxSafeValue;</span>
+      }
+      return result;
+    } catch {
+<span class="cstat-no" title="statement not covered" >      return this.maxSafeValue;</span>
+    }
+  }
+&nbsp;
+  /**
+   * 计算安全的向量距离
+   * 防止高维向量计算溢出
+   */
+  safeDistance(a: bigint[], b: bigint[]): number {
+    if (a.length !== b.length) {
+      throw new Error('Vector dimensions must match');
+    }
+&nbsp;
+    let sum = 0n;
+    for (let i = 0; i &lt; a.length; i++) {
+      const diff = a[i] &gt; b[i] ? <span class="branch-0 cbranch-no" title="branch not covered" >a[i] - b[i] </span>: b[i] - a[i];
+      sum += diff * diff;
+      
+      // 溢出检测
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (sum &gt; this.maxSafeValue) {
+<span class="cstat-no" title="statement not covered" >        return Number.MAX_SAFE_INTEGER;</span>
       }
     }
-<span class="cstat-no" title="statement not covered" >    return chunks;</span>
+    
+    return Number(sum);
   }
 }
 &nbsp;
-/** Singleton instance */
-export const <span class="cstat-no" title="statement not covered" >zstdCompression = new ZstdCompression();</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >export default ZstdCompression;</span>
+/**
+ * 默认导出
+ */
+export default {
+  popcnt64,
+  hammingDistance,
+  isSimilar,
+  CandidateLimiter,
+  OverflowProtectedCalculator,
+  UINT64_MASK,
+  HAMMING_THRESHOLD,
+  DEFAULT_FILE_SEED,
+  CANDIDATE_LIMIT,
+  HIGH_DIMENSION_THRESHOLD,
+};
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -586,7 +769,7 @@ export const <span class="cstat-no" title="statement not covered" >zstdCompressi
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-03-08T12:22:47.163Z
+                at 2026-03-08T12:23:14.241Z
             </div>
         <script src="prettify.js"></script>
         <script>

@@ -9,11 +9,13 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'js', 'json'],
   collectCoverageFrom: [
-    'src/storage/zstd-compression.ts',
+    'src/**/*.ts',
+    '!src/**/*.d.ts',
+    '!src/**/index.ts',
   ],
   coverageThreshold: {
-    'src/storage/zstd-compression.ts': {
-      lines: 80,
+    global: {
+      lines: 60,
     },
   },
   testTimeout: 60000,

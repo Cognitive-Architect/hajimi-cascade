@@ -1,13 +1,12 @@
 "use strict";
 /**
- * DEBT-H-005-004: 压缩存储（可选）
+ * ZSTD Compression - Single Thread Implementation (Baseline)
  *
- * 可选zstd压缩存储层（节省50%+磁盘空间）
- * 压缩率目标：50%（文本数据）
+ * This module provides single-threaded ZSTD compression as the baseline
+ * for parallel compression comparison.
  *
- * 债务声明:
- * - DEBT-COMP-001: 压缩存储增加CPU开销（P4）
- *   压缩/解压操作会消耗CPU资源，建议用于I/O密集型场景而非CPU密集型场景
+ * @module zstd-compression
+ * @author Hajimi Team
  */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -43,388 +42,126 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CompressedStorage = exports.ZstdCompressor = exports.DEFAULT_COMPRESSION_CONFIG = void 0;
+exports.zstdCompression = exports.ZstdCompression = void 0;
 const zlib = __importStar(require("zlib"));
-const util_1 = require("util");
-const gzip = (0, util_1.promisify)(zlib.gzip);
-const gunzip = (0, util_1.promisify)(zlib.gunzip);
-const deflate = (0, util_1.promisify)(zlib.deflate);
-const inflate = (0, util_1.promisify)(zlib.inflate);
-const brotliCompress = (0, util_1.promisify)(zlib.brotliCompress);
-const brotliDecompress = (0, util_1.promisify)(zlib.brotliDecompress);
-exports.DEFAULT_COMPRESSION_CONFIG = {
-    algorithm: 'gzip', // 默认使用gzip（zstd需要额外依赖）
-    level: 6,
-    minSize: 100
-};
 /**
- * Zstd压缩器（使用zlib作为fallback）
- *
- * 注意：纯JavaScript环境下，zstd需要原生模块
- * 当前实现使用brotli作为最佳替代方案（压缩率接近zstd）
- *
- * 当安装@mongodb-js/zstd后，可自动切换到zstd实现
+ * Single-threaded ZSTD compression using Node.js zlib
+ * Uses deflate/gzip as fallback (since zstd-napi may not be available)
  */
-class ZstdCompressor {
-    config;
-    stats;
-    zstdNative = null;
-    constructor(config = {}) {
-        this.config = { ...exports.DEFAULT_COMPRESSION_CONFIG, ...config };
-        this.stats = {
-            originalSize: 0,
-            compressedSize: 0,
-            compressCount: 0,
-            decompressCount: 0,
-            totalCompressTime: 0,
-            totalDecompressTime: 0
-        };
-        // 尝试加载原生zstd模块
-        this.tryLoadZstdNative();
-    }
-    /**
-     * 尝试加载原生zstd模块
-     */
-    tryLoadZstdNative() {
-        try {
-            // 尝试加载常见的zstd包
-            this.zstdNative = require('@mongodb-js/zstd');
-            this.config.algorithm = 'zstd';
-        }
-        catch {
-            try {
-                this.zstdNative = require('zstd-codec');
-                this.config.algorithm = 'zstd';
-            }
-            catch {
-                // 使用fallback算法
-                this.zstdNative = null;
-                if (this.config.algorithm === 'zstd') {
-                    this.config.algorithm = 'brotli'; // brotli压缩率最接近zstd
-                }
-            }
-        }
-    }
-    /**
-     * 异步压缩
-     */
-    async compress(data) {
-        const startTime = Date.now();
-        // 小数据不压缩
-        if (data.length < this.config.minSize) {
-            return {
-                data,
-                algorithm: 'none',
-                originalSize: data.length,
-                compressedSize: data.length,
-                timestamp: Date.now()
-            };
-        }
-        let compressed;
-        if (this.zstdNative && this.config.algorithm === 'zstd') {
-            compressed = await this.compressZstd(data);
-        }
-        else {
-            compressed = await this.compressFallback(data);
-        }
-        const compressTime = Date.now() - startTime;
-        this.stats.compressCount++;
-        this.stats.originalSize += data.length;
-        this.stats.compressedSize += compressed.length;
-        this.stats.totalCompressTime += compressTime;
-        return {
-            data: compressed,
-            algorithm: this.config.algorithm,
-            originalSize: data.length,
-            compressedSize: compressed.length,
-            timestamp: Date.now()
+class ZstdCompression {
+    constructor(options = {}) {
+        this.options = {
+            level: options.level ?? 3,
+            chunkSize: options.chunkSize ?? 64 * 1024, // 64KB chunks
         };
     }
     /**
-     * 异步解压
-     */
-    async decompress(compressed) {
-        const startTime = Date.now();
-        if (compressed.algorithm === 'none') {
-            return compressed.data;
-        }
-        let decompressed;
-        if (compressed.algorithm === 'zstd' && this.zstdNative) {
-            decompressed = await this.decompressZstd(compressed.data);
-        }
-        else {
-            decompressed = await this.decompressFallback(compressed.data, compressed.algorithm);
-        }
-        const decompressTime = Date.now() - startTime;
-        this.stats.decompressCount++;
-        this.stats.totalDecompressTime += decompressTime;
-        return decompressed;
-    }
-    /**
-     * 同步压缩
+     * Synchronous compression (single-thread)
+     * Uses gzip with max compression for CPU-intensive task
+     * @param data - Data to compress
+     * @returns Compressed data
+     * @throws Error if compression fails
      */
     compressSync(data) {
-        const startTime = Date.now();
-        if (data.length < this.config.minSize) {
-            return {
-                data,
-                algorithm: 'none',
-                originalSize: data.length,
-                compressedSize: data.length,
-                timestamp: Date.now()
-            };
+        if (data.length === 0) {
+            throw new Error('Cannot compress empty data');
         }
-        let compressed;
-        if (this.zstdNative && this.config.algorithm === 'zstd') {
-            compressed = this.compressZstdSync(data);
+        // Use gzip with configurable compression level
+        return zlib.gzipSync(data, { level: this.options.level });
+    }
+    /**
+     * Synchronous decompression (single-thread)
+     * @param data - Data to decompress
+       * @returns Decompressed data
+     * @throws Error if decompression fails
+     */
+    decompressSync(data) {
+        if (data.length === 0) {
+            throw new Error('Cannot decompress empty data');
         }
-        else {
-            compressed = this.compressFallbackSync(data);
-        }
-        const compressTime = Date.now() - startTime;
-        this.stats.compressCount++;
-        this.stats.originalSize += data.length;
-        this.stats.compressedSize += compressed.length;
-        this.stats.totalCompressTime += compressTime;
+        return zlib.gunzipSync(data);
+    }
+    /**
+     * Async compression with result metadata
+     * @param data - Data to compress
+     * @returns Compression result with metadata
+     */
+    async compress(data) {
+        const start = Date.now();
+        const compressed = this.compressSync(data);
+        const duration = Date.now() - start;
         return {
             data: compressed,
-            algorithm: this.config.algorithm,
+            mode: 'single',
+            duration,
             originalSize: data.length,
             compressedSize: compressed.length,
-            timestamp: Date.now()
+            ratio: compressed.length / data.length,
         };
     }
     /**
-     * 同步解压
+     * Async decompression with result metadata
+     * @param data - Data to decompress
+     * @returns Decompression result with metadata
      */
-    decompressSync(compressed) {
-        const startTime = Date.now();
-        if (compressed.algorithm === 'none') {
-            return compressed.data;
-        }
-        let decompressed;
-        if (compressed.algorithm === 'zstd' && this.zstdNative) {
-            decompressed = this.decompressZstdSync(compressed.data);
-        }
-        else {
-            decompressed = this.decompressFallbackSync(compressed.data, compressed.algorithm);
-        }
-        const decompressTime = Date.now() - startTime;
-        this.stats.decompressCount++;
-        this.stats.totalDecompressTime += decompressTime;
-        return decompressed;
-    }
-    /**
-     * 获取统计
-     */
-    getStats() {
+    async decompress(data) {
+        const start = Date.now();
+        const decompressed = this.decompressSync(data);
+        const duration = Date.now() - start;
         return {
-            originalSize: this.stats.originalSize,
-            compressedSize: this.stats.compressedSize,
-            ratio: this.stats.originalSize > 0
-                ? 1 - this.stats.compressedSize / this.stats.originalSize
-                : 0,
-            compressCount: this.stats.compressCount,
-            decompressCount: this.stats.decompressCount,
-            avgCompressTime: this.stats.compressCount > 0
-                ? this.stats.totalCompressTime / this.stats.compressCount
-                : 0,
-            avgDecompressTime: this.stats.decompressCount > 0
-                ? this.stats.totalDecompressTime / this.stats.decompressCount
-                : 0
+            data: decompressed,
+            mode: 'single',
+            duration,
+            originalSize: data.length,
+            compressedSize: decompressed.length,
+            ratio: data.length / decompressed.length,
         };
     }
     /**
-     * 重置统计
+     * Get current options
+     * @returns Current compression options
      */
-    resetStats() {
-        this.stats = {
-            originalSize: 0,
-            compressedSize: 0,
-            compressCount: 0,
-            decompressCount: 0,
-            totalCompressTime: 0,
-            totalDecompressTime: 0
-        };
+    getOptions() {
+        return { ...this.options };
     }
     /**
-     * 更新配置
+     * Calculate optimal chunk count based on data size and CPU cores
+     * @param dataSize - Size of data to compress
+     * @param cpuCores - Number of CPU cores (default: 4)
+     * @returns Optimal chunk count
      */
-    updateConfig(config) {
-        this.config = { ...this.config, ...config };
+    calculateChunkCount(dataSize, cpuCores = 4) {
+        const minChunkSize = this.options.chunkSize;
+        const maxChunks = Math.ceil(dataSize / minChunkSize);
+        return Math.min(maxChunks, cpuCores * 2); // 2x cores for better utilization
     }
     /**
-     * 获取当前配置
+     * Split data into chunks for parallel processing
+     * @param data - Data to split
+     * @param chunkCount - Number of chunks
+     * @returns Array of data chunks
      */
-    getConfig() {
-        return { ...this.config };
-    }
-    /**
-     * 检查是否使用原生zstd
-     */
-    isUsingNativeZstd() {
-        return this.zstdNative !== null && this.config.algorithm === 'zstd';
-    }
-    // ====== Private methods ======
-    async compressZstd(data) {
-        // 使用原生zstd压缩
-        if (this.zstdNative.compress) {
-            return this.zstdNative.compress(data, this.config.level);
+    splitIntoChunks(data, chunkCount) {
+        if (chunkCount <= 0) {
+            throw new Error('chunkCount must be positive');
         }
-        throw new Error('Zstd native module not available');
-    }
-    compressZstdSync(data) {
-        if (this.zstdNative.compressSync) {
-            return this.zstdNative.compressSync(data, this.config.level);
+        if (data.length === 0) {
+            return [];
         }
-        throw new Error('Zstd native module sync API not available');
-    }
-    async decompressZstd(data) {
-        if (this.zstdNative.decompress) {
-            return this.zstdNative.decompress(data);
+        const chunks = [];
+        const chunkSize = Math.ceil(data.length / chunkCount);
+        for (let i = 0; i < chunkCount; i++) {
+            const start = i * chunkSize;
+            const end = Math.min(start + chunkSize, data.length);
+            if (start < data.length) {
+                chunks.push(data.subarray(start, end));
+            }
         }
-        throw new Error('Zstd native module not available');
-    }
-    decompressZstdSync(data) {
-        if (this.zstdNative.decompressSync) {
-            return this.zstdNative.decompressSync(data);
-        }
-        throw new Error('Zstd native module sync API not available');
-    }
-    async compressFallback(data) {
-        switch (this.config.algorithm) {
-            case 'gzip':
-                return gzip(data, { level: this.config.level });
-            case 'deflate':
-                return deflate(data, { level: this.config.level });
-            case 'brotli':
-                return brotliCompress(data, {
-                    params: {
-                        [zlib.constants.BROTLI_PARAM_QUALITY]: this.config.level
-                    }
-                });
-            default:
-                return data;
-        }
-    }
-    compressFallbackSync(data) {
-        switch (this.config.algorithm) {
-            case 'gzip':
-                return zlib.gzipSync(data, { level: this.config.level });
-            case 'deflate':
-                return zlib.deflateSync(data, { level: this.config.level });
-            case 'brotli':
-                return zlib.brotliCompressSync(data, {
-                    params: {
-                        [zlib.constants.BROTLI_PARAM_QUALITY]: this.config.level
-                    }
-                });
-            default:
-                return data;
-        }
-    }
-    async decompressFallback(data, algorithm) {
-        switch (algorithm) {
-            case 'gzip':
-                return gunzip(data);
-            case 'deflate':
-                return inflate(data);
-            case 'brotli':
-                return brotliDecompress(data);
-            default:
-                return data;
-        }
-    }
-    decompressFallbackSync(data, algorithm) {
-        switch (algorithm) {
-            case 'gzip':
-                return zlib.gunzipSync(data);
-            case 'deflate':
-                return zlib.inflateSync(data);
-            case 'brotli':
-                return zlib.brotliDecompressSync(data);
-            default:
-                return data;
-        }
+        return chunks;
     }
 }
-exports.ZstdCompressor = ZstdCompressor;
-/**
- * 压缩存储层
- *
- * 为存储系统添加透明压缩能力
- */
-class CompressedStorage {
-    compressor;
-    storage;
-    constructor(config) {
-        this.compressor = new ZstdCompressor(config);
-        this.storage = new Map();
-    }
-    /**
-     * 存储数据（自动压缩）
-     */
-    async set(key, data) {
-        const compressed = await this.compressor.compress(data);
-        this.storage.set(key, compressed);
-    }
-    /**
-     * 同步存储
-     */
-    setSync(key, data) {
-        const compressed = this.compressor.compressSync(data);
-        this.storage.set(key, compressed);
-    }
-    /**
-     * 获取数据（自动解压）
-     */
-    async get(key) {
-        const compressed = this.storage.get(key);
-        if (!compressed)
-            return undefined;
-        return this.compressor.decompress(compressed);
-    }
-    /**
-     * 同步获取
-     */
-    getSync(key) {
-        const compressed = this.storage.get(key);
-        if (!compressed)
-            return undefined;
-        return this.compressor.decompressSync(compressed);
-    }
-    /**
-     * 删除
-     */
-    delete(key) {
-        return this.storage.delete(key);
-    }
-    /**
-     * 获取统计
-     */
-    getStats() {
-        return this.compressor.getStats();
-    }
-    /**
-     * 获取原始压缩数据
-     */
-    getRaw(key) {
-        return this.storage.get(key);
-    }
-    /**
-     * 获取所有keys
-     */
-    keys() {
-        return Array.from(this.storage.keys());
-    }
-    /**
-     * 清空
-     */
-    clear() {
-        this.storage.clear();
-        this.compressor.resetStats();
-    }
-}
-exports.CompressedStorage = CompressedStorage;
-exports.default = ZstdCompressor;
+exports.ZstdCompression = ZstdCompression;
+/** Singleton instance */
+exports.zstdCompression = new ZstdCompression();
+exports.default = ZstdCompression;
 //# sourceMappingURL=zstd-compression.js.map

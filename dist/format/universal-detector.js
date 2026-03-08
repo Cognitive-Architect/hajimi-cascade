@@ -545,3 +545,4 @@ exports.default = {
     detectBinary,
     CONFIDENCE_THRESHOLDS: exports.CONFIDENCE_THRESHOLDS
 };
+//# sourceMappingURL=universal-detector.js.map

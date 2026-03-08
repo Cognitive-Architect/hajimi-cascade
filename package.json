@@ -10,10 +10,17 @@
     "benchmark": "node scripts/perf-benchmark.mjs",
     "debt-check": "node scripts/debt-check.mjs"
   },
-  "keywords": ["cdc", "deduplication", "cascade-hash", "content-defined-chunking", "w-tinylfu"],
+  "keywords": [
+    "cdc",
+    "deduplication",
+    "cascade-hash",
+    "content-defined-chunking",
+    "w-tinylfu"
+  ],
   "author": "Cognitive-Architect",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.0.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.0",

@@ -76,9 +76,9 @@
 
 | Wave | 报告路径 |
 |:---|:---|
-| Wave 1 | `docs/self-audit/phase3-wave1/WAVE-1-SELF-AUDIT.md` |
-| Wave 2 | `docs/self-audit/phase3-wave2/WAVE-2-SELF-AUDIT.md` |
-| Wave 3 | `docs/self-audit/phase3-wave3/WAVE-3-SELF-AUDIT.md` |
+| Wave 1 | `WAVE-1-SELF-AUDIT.md` （本目录） |
+| Wave 2 | `WAVE-2-SELF-AUDIT.md` （本目录） |
+| Wave 3 | `WAVE-3-SELF-AUDIT.md` （本目录） |
 
 ---
 

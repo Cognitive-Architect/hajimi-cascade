@@ -1,0 +1,368 @@
+# Engineer 标准工作流与文档命名规范
+
+> 本文档记录 Hajimi-Cascade 工程执行的标准工作流、目录结构和命名约定，防止遗忘。
+
+---
+
+## 1. 完整执行工作流（读取 → 执行 → 输出）
+
+### 1.1 任务读取阶段
+
+#### 读取位置
+```
+engineer/XX.md                  # 派单文件（如 04.md）
+```
+
+#### 读取后必须解析的内容
+1. **批次信息**: Phase X, 版本目标, 质量约束
+2. **Wave 矩阵**: 波次数量、依赖关系、交付物清单
+3. **刀刃表**: 风险自测项（FUNC/CONST/NEG/E2E/High）
+4. **地狱红线**: 10项不可违反的底线
+5. **收卷格式**: 验收报告模板
+
+#### 执行策略确认
+- 单波: 直接执行
+- 多波串行: Wave 1 → Wave 2 → Wave 3（前波不过后波不开）
+- 并行波: 多任务并行，最后汇总
+
+---
+
+### 1.2 开发执行阶段
+
+#### 步骤 1: 环境准备
+```bash
+# 1. 检查当前分支
+git branch --show-current
+
+# 2. 创建/切换到任务分支
+git checkout -b feat/phaseX-[task-name]
+
+# 3. 验证基线状态
+npm test          # 确保原测试通过
+npm run build     # 确保构建通过
+```
+
+#### 步骤 2: Wave 执行（循环）
+对于每个 Wave:
+
+```
+① 创建交付物目录
+   mkdir -p tests/xxx scripts/xxx src/xxx
+
+② 编写代码（严格遵守行数限制）
+   - 单元测试: 80±10行
+   - CI配置: 120±10行
+   - 其他: 参照行数限制表
+
+③ 构建验证
+   npm run build
+
+④ 测试验证
+   npm test -- [特定测试]
+
+⑤ 刀刃表自检
+   - FUNC: 核心功能完整？
+   - CONST: 约束条件满足？
+   - NEG: 负面路径覆盖？
+   - E2E: 端到端通过？
+   - High: 高风险防护？
+
+⑥ 红线检查
+   - 10项红线全绿才能进入下一 Wave
+   - 任一红线触发立即返工
+
+⑦ 编写 Self-Audit 报告
+   docs/taskXX/XX-waveN-self-audit.md
+
+⑧ Git 提交
+   git add [文件]
+   git commit -m "feat(phaseX-waveN): [描述]"
+```
+
+#### 步骤 3: Wave 间验收
+```
+Wave N 完成 → 自测报告 → 申请验收 → A级/Go → 启动 Wave N+1
+            ↓ 验收失败
+            返工重来
+```
+
+---
+
+### 1.3 报告输出阶段
+
+#### 输出位置
+```
+docs/taskXX/                    # 批次目录
+├── README-XX.md                # 总体验收报告
+├── XX-wave1-self-audit.md      # Wave 1 自测
+├── XX-wave2-self-audit.md      # Wave 2 自测
+└── XX-wave3-self-audit.md      # Wave 3 自测（如适用）
+```
+
+#### 总体验收报告（README-XX.md）内容模板
+```markdown
+# Phase X [批次名称] - 验收报告
+
+## 批次信息
+- **批次**: Phase X (XX.md)
+- **策略**: [单波/多波串行/并行]
+- **质量原则**: 不计时间成本，只求硬核质量
+- **验收状态**: 申请A级/Go
+
+## Wave 交付物汇总
+
+| Wave | 交付物 | 路径 | 行数 | 状态 |
+|:---|:---|:---:|:---:|:---:|
+| Wave 1 | xxx | `路径` | XX | ✅ |
+
+## 红线验证（X项全绿）
+
+| Wave | 红线数 | 状态 |
+|:---|:---:|:---:|
+| Wave 1 | 10 | ✅ 全绿 |
+
+## P4检查表（X项全绿）
+
+| Wave | 检查项 | 状态 |
+|:---|:---:|:---:|
+| Wave 1 | 10 | ✅ 全绿 |
+
+## Self-Audit 索引
+
+| Wave | 报告路径 |
+|:---|:---|
+| Wave 1 | `XX-wave1-self-audit.md` （本目录） |
+
+## 版本声明
+
+**vX.Y.Z-[CODENAME]** 达成条件：
+- [x] Wave 1 A级/Go
+- [x] X项红线零触发
+- [x] X项P4全绿
+
+## 验收口令
+
+> **"Phase X A级/Go，vX.Y.Z-[CODENAME]达成"**
+
+---
+*归档时间: YYYY-MM-DD*
+*批次对应: engineer/XX.md*
+```
+
+#### 同步到 downloads 目录
+```bash
+# 同步到可读目录
+mkdir -p storage/downloads/hajimi-cascade/docs/taskXX/
+cp hajimi-cascade/docs/taskXX/* storage/downloads/hajimi-cascade/docs/taskXX/
+```
+
+---
+
+## 2. 批次命名规则
+
+### 批次标识
+| 批次 | 目录名 | engineer文件 | 版本目标 |
+|:---|:---|:---|:---|
+| Phase 1 | `task01/` | `01.md` | v2.6.1-HELL |
+| Phase 2 | `task02/` | `02.md` | v2.7.0-HELL-A级 |
+| Phase 3 | `task03/` | `03.md` | v2.8.0-PROD-HARDENED |
+| Phase 4 | `task04/` | `04.md` | 下一批次 |
+
+### 批次目录结构
+```
+docs/task04/                    # 批次主目录
+├── README-04.md                # 总体验收报告（序号在后）
+├── 04-wave1-self-audit.md      # Wave 1 自测报告（序号在前，小写）
+├── 04-wave2-self-audit.md      # Wave 2 自测报告
+└── 04-wave3-self-audit.md      # Wave 3 自测报告（如适用）
+```
+
+> **注意**: task03 及之前批次保持原命名（README.md + WAVE-X-SELF-AUDIT.md），从 task04 开始执行新规范。
+
+---
+
+## 3. Wave 执行规范
+
+### Wave 类型
+- **单波**: 简单任务，单文件交付
+- **多波串行**: Wave 1 → Wave 2 → Wave 3，前波不过后波不开
+- **并行波**: 多任务并行执行
+
+### Wave 命名
+```
+Wave 1: [任务简述]
+Wave 2: [任务简述]（依赖 Wave 1）
+Wave 3: [任务简述]（依赖 Wave 2）
+```
+
+### 每个 Wave 必须包含
+1. **交付物清单**（文件路径 + 行数限制）
+2. **刀刃表**（FUNC/CONST/NEG/E2E/High 五类风险）
+3. **地狱红线**（10项，违反即停）
+4. **P4 检查表**（10项质量检查）
+5. **Self-Audit 报告**
+
+---
+
+## 4. Self-Audit 报告规范
+
+### 报告内容（必须包含）
+```markdown
+## 提交信息
+- Commit: `feat(phaseX-waveN): [描述]`
+- 分支: `feat/[branch-name]`
+- 变更文件: [列表]
+
+## 刀刃表摘要
+| 类别 | 覆盖数 | 关键证据 |
+
+## 地狱红线验证（10项）
+| 红线ID | 状态 | 证据 |
+
+## P4检查表
+| 检查点 | 状态 | 说明 |
+
+## 交付物验证
+[每项交付物的验证]
+
+## 债务声明
+- 当前波次债务
+- 前置债务
+
+## 验收申请
+[口令]
+```
+
+---
+
+## 5. Git 提交规范
+
+### 分支命名
+```
+feat/phase3-prod-hardening      # 功能分支
+fix/hell001-debt-clearance      # 修复分支
+```
+
+### 提交消息格式
+```
+feat(phaseX-waveN): 简短描述
+
+- 交付物1: 路径 (行数)
+- 交付物2: 路径 (行数)
+- 核心成果
+
+红线状态: X/10 绿
+```
+
+---
+
+## 6. 目录结构总览
+
+### 工程目录
+```
+hajimi-cascade/
+├── engineer/                   # 【读取】派单文件目录
+│   ├── 01.md                   # Phase 1 派单
+│   ├── 02.md                   # Phase 2 派单
+│   ├── 03.md                   # Phase 3 派单
+│   ├── 04.md                   # Phase 4 派单（下一批次）
+│   └── engineer.md             # 本规范文件
+│
+├── docs/                       # 【输出】文档归档
+│   ├── task01/                 # Phase 1 验收
+│   │   └── README.md
+│   ├── task02/                 # Phase 2 验收
+│   │   └── README.md
+│   ├── task03/                 # Phase 3 验收
+│   │   ├── README.md
+│   │   ├── WAVE-1-SELF-AUDIT.md    # 旧命名，保持兼容
+│   │   ├── WAVE-2-SELF-AUDIT.md
+│   │   └── WAVE-3-SELF-AUDIT.md
+│   └── task04/                 # Phase 4 开始新规范
+│       ├── README-04.md
+│       ├── 04-wave1-self-audit.md
+│       ├── 04-wave2-self-audit.md
+│       └── 04-wave3-self-audit.md
+│
+├── src/                        # 源代码
+├── tests/                      # 测试文件
+├── scripts/                    # 工具脚本
+└── .github/                    # CI/CD 配置
+```
+
+### 完整工作流图示
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  ① 读取任务     │     │  ② 执行开发     │     │  ③ 输出报告     │
+│  engineer/XX.md │ ──▶ │  Wave 1/2/3    │ ──▶ │  docs/taskXX/   │
+│                 │     │                 │     │                 │
+│ • 解析Wave矩阵  │     │ • 编写交付物    │     │ • 总体验收报告  │
+│ • 识别红线      │     │ • 刀刃表自检    │     │ • Self-Audit    │
+│ • 确认策略      │     │ • 红线检查      │     │ • 同步downloads │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+         │                       │                       │
+         ▼                       ▼                       ▼
+   失败: 请求澄清          失败: 返工重来          失败: 补充修正
+```
+
+---
+
+## 7. 验收口令
+
+### Wave 级别
+```
+"Wave N A级/Go，启动Wave N+1"
+```
+
+### Phase 级别
+```
+"Phase X A级/Go，vX.Y.Z-[CODENAME]达成"
+```
+
+---
+
+## 8. 行数限制参考
+
+| 交付物类型 | 目标行数 | 浮动范围 |
+|:---|:---:|:---:|
+| 单元测试 | 80行 | ±10行 |
+| 集成测试 | 100行 | ±10行 |
+| 压力测试 | 100行 | ±10行 |
+| CI配置 | 120行 | ±10行 |
+| 工具脚本 | 100行 | ±10行 |
+| 适配层 | 80行 | ±10行 |
+| 安全模块 | 120行 | ±10行 |
+| 迁移器 | 150行 | ±10行 |
+
+---
+
+## 9. 执行检查清单（Checklist）
+
+每次执行前必读：
+
+- [ ] 已读取 engineer/XX.md 完整内容
+- [ ] 已确认 Wave 类型（单波/串行/并行）
+- [ ] 已识别所有交付物和行数限制
+- [ ] 已理解10项红线内容
+- [ ] 已创建 feat/ 分支
+- [ ] 已验证基线测试通过
+- [ ] 已按 Wave 顺序执行（串行时）
+- [ ] 每项交付物已通过构建+测试
+- [ ] 已编写 Self-Audit 报告
+- [ ] 已输出到 docs/taskXX/
+- [ ] 已同步到 storage/downloads/
+- [ ] 已 Git 提交
+
+---
+
+## 10. 历史变更记录
+
+| 日期 | 变更 |
+|:---|:---|
+| 2026-03-09 | 确立 task04+ 新命名规范（README-XX.md + XX-waveN-self-audit.md）|
+| 2026-03-09 | task03 及之前保持兼容性命名 |
+| 2026-03-09 | 补充完整工作流（读取 → 执行 → 输出）|
+
+---
+
+*本规范由 Engineer 维护，执行时务必遵守，防止返工。*

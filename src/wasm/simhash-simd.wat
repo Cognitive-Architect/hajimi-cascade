@@ -144,7 +144,7 @@
     v128.load
     local.get $b
     v128.load
-    v128.eq
+    i64x2.eq
     local.tee $v
     i64x2.all_true
   )

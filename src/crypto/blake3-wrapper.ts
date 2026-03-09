@@ -1,71 +1,65 @@
 /**
- * blake3-wrapper.ts - B-03: BLAKE3绑定 (≤150行)
- * 提供BLAKE3 API，实际使用SHA-256模拟(环境无原生BLAKE3)
- * 注意: 生产环境应使用 blake3 npm包
+ * blake3-wrapper.ts - B-02: BLAKE3真实现 (≤80行)
+ * @debt BLAKE3-v2.9.1-001: 已清偿，现为真BLAKE3
  */
 
-import { createHash } from 'crypto';
+import { hash, createHasher, Hasher } from 'blake3-jit';
 
-export type HashAlgorithm = 'blake3' | 'sha256' | 'md5';
+export class Blake3Wrapper {
+  private hasher?: Hasher;
 
-export interface Blake3Hash {
-  update(data: Uint8Array | string): Blake3Hash;
-  digest(): Uint8Array;
-  digestHex(): string;
-}
+  constructor() {
+    this.reset();
+  }
 
-/** BLAKE3模拟器(使用SHA-256) */
-class Blake3Simulator implements Blake3Hash {
-  private hasher = createHash('sha256');
+  /** 重置哈希状态 */
+  reset(): void {
+    this.hasher = undefined;
+  }
 
-  update(data: Uint8Array | string): Blake3Hash {
-    if (typeof data === 'string') {
-      this.hasher.update(data, 'utf-8');
-    } else {
-      this.hasher.update(Buffer.from(data));
+  /** 增量更新数据 */
+  update(data: Buffer | string): this {
+    const buf = Buffer.isBuffer(data) ? data : Buffer.from(data);
+    if (!this.hasher) {
+      this.hasher = createHasher();
     }
+    this.hasher.update(buf);
     return this;
   }
 
-  digest(): Uint8Array {
-    return new Uint8Array(this.hasher.digest());
+  /** 计算最终哈希值 */
+  digest(): Buffer {
+    if (!this.hasher) {
+      return Buffer.from(hash(Buffer.alloc(0)));
+    }
+    return Buffer.from(this.hasher.finalize());
   }
 
+  /** 计算十六进制哈希 */
   digestHex(): string {
-    return this.hasher.digest('hex');
+    return this.digest().toString('hex');
+  }
+
+  /** 静态一次性哈希 */
+  static hash(data: Buffer | string): Buffer {
+    const buf = Buffer.isBuffer(data) ? data : Buffer.from(data);
+    return Buffer.from(hash(buf));
+  }
+
+  /** 静态十六进制哈希 */
+  static hashHex(data: Buffer | string): string {
+    return Blake3Wrapper.hash(data).toString('hex');
   }
 }
 
-/** 创建BLAKE3 hasher */
-export function createBlake3(): Blake3Hash {
-  return new Blake3Simulator();
+/** 便捷函数: 一次性哈希 */
+export function blake3Hash(data: Buffer | string): Buffer {
+  return Blake3Wrapper.hash(data);
 }
 
-/** 快速哈希 */
-export function blake3(data: Uint8Array | string): Uint8Array {
-  return createBlake3().update(data).digest();
+/** 便捷函数: 十六进制哈希 */
+export function blake3HashHex(data: Buffer | string): string {
+  return Blake3Wrapper.hashHex(data);
 }
 
-export function blake3Hex(data: Uint8Array | string): string {
-  return createBlake3().update(data).digestHex();
-}
-
-/** 密钥派生(KDF)模拟 */
-export function deriveKey(key: string, context: string): Uint8Array {
-  return createBlake3()
-    .update(context)
-    .update(key)
-    .digest();
-}
-
-/** 多线程安全: 创建独立hasher */
-export function createHasher(): Blake3Hash {
-  return createBlake3();
-}
-
-/** 验证与b3sum兼容(简化) */
-export function verifyB3sum(data: Uint8Array, expectedHex: string): boolean {
-  return blake3Hex(data) === expectedHex;
-}
-
-export default { createBlake3, blake3, blake3Hex, deriveKey };
+export default Blake3Wrapper;

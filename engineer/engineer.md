@@ -149,12 +149,24 @@ docs/taskXX/                    # 批次目录
 *批次对应: engineer/XX.md*
 ```
 
-#### 同步到 downloads 目录
+#### 同步到 downloads 目录（**重要！不要遗漏**）
+
 ```bash
-# 同步到可读目录
+# 1. 同步文档（总结报告 + Self-Audit）
 mkdir -p storage/downloads/hajimi-cascade/docs/taskXX/
 cp hajimi-cascade/docs/taskXX/* storage/downloads/hajimi-cascade/docs/taskXX/
+
+# 2. 【必须】同步交付物（代码/测试/脚本/配置）
+# 每次都必须同步以下目录，不能只同步文档！
+cp hajimi-cascade/src/XXX/xxx.ts storage/downloads/hajimi-cascade/src/XXX/
+cp hajimi-cascade/tests/XXX/xxx.test.ts storage/downloads/hajimi-cascade/tests/XXX/
+cp hajimi-cascade/scripts/XXX/xxx.mjs storage/downloads/hajimi-cascade/scripts/XXX/
+cp hajimi-cascade/.github/workflows/xxx.yml storage/downloads/hajimi-cascade/.github/workflows/
 ```
+
+> ⚠️ **警告**：每次必须同时同步「总结文档」和「交付物代码」，不能只同步文档！
+> 
+> 漏同步内容会导致用户无法查看实际代码和测试文件，这是**低级错误**。
 
 ---
 
@@ -351,6 +363,8 @@ hajimi-cascade/
 - [ ] 已编写 Self-Audit 报告
 - [ ] 已输出到 docs/taskXX/
 - [ ] 已同步到 storage/downloads/
+  - [ ] 文档（README + Self-Audit）
+  - [ ] 交付物（src/ tests/ scripts/ .github/）⚠️ **不要遗漏！**
 - [ ] 已 Git 提交
 
 ---

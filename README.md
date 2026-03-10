@@ -5,7 +5,6 @@
 TypeScript implementation optimized for context compression in code intelligence systems.
 
 **Version**: v2.9.0-ALGORITHM-HARDENED  
-**Audit**: 211号审计A级认证 / Audit 211 A-Rating  
 **Status**: Production Ready
 
 ---
@@ -1198,7 +1197,6 @@ Per-Chunker Buffer Pool Structure:
 - [x] BLAKE3 cryptographic upgrade (MD5 → BLAKE3)
 - [x] WASM-accelerated SimHash (SIMD popcount)
 - [x] Buffer Pooling for RSS stability
-- [x] 211号审计A级认证
 
 **Phase 2: Scale Optimization (Q3 2026)**
 - [ ] Persistent LSH index (RocksDB backend)
@@ -1255,9 +1253,7 @@ Per-Chunker Buffer Pool Structure:
 
 **Active Debts**: None
 
-### Appendix D: Audit Certification
 
-**211号审计A级认证** (Audit 211 A-Rating):
 - **Date**: 2026-03-09
 - **Scope**: v2.9.0-ALGORITHM-HARDENED full stack
 - **Result**: A级/Go (Pass)
@@ -1265,7 +1261,6 @@ Per-Chunker Buffer Pool Structure:
   - WASM SIMD implementation meets performance targets
   - BLAKE3 integration passes cryptographic review
   - Buffer Pool achieves <10% RSS stability
-- **Report**: `docs/audit report/task05/211-AUDIT-v2.9.0-FINAL.md`
 
 ---
 
@@ -1273,6 +1268,5 @@ Per-Chunker Buffer Pool Structure:
 
 High-Performance Context Compression for Code Intelligence
 
-**Certification**: 211号审计A级 / Audit 211 A-Rating
 
 Last Updated: 2026-03-09

@@ -1,6 +1,6 @@
 /**
  * hash-factory.ts - B-03: 哈希策略工厂 (≤120行)
- * 支持MD5(v2.8兼容)和BLAKE3(v2.9新)双模式
+ * 支持MD5(v2.8兼容)和BLAKE3(v2.9新)双模式读写
  */
 
 import { blake3Hash, blake3HashHex, Blake3Wrapper } from './blake3-wrapper';
@@ -83,4 +83,63 @@ export function crossVerify(data: Uint8Array): { md5: string; blake3: string; ma
   return { md5, blake3: b3, match: false };
 }
 
-export default { createHashStrategy, detectVersion, crossVerify };
+/** B-03: Legacy(v2.8)写入策略 */
+export function writeLegacy(data: Uint8Array): { hash: string; hex: string } {
+  const strategy = createHashStrategy('legacy');
+  return {
+    hash: strategy.hashHex(data),
+    hex: strategy.hashHex(data),
+  };
+}
+
+/** B-03: Modern(v2.9)写入策略 */
+export function writeModern(data: Uint8Array): { hash: string; hex: string } {
+  const strategy = createHashStrategy('modern');
+  return {
+    hash: strategy.hashHex(data),
+    hex: strategy.hashHex(data),
+  };
+}
+
+/** B-03: 根据目标版本自动选择写入策略 */
+export function writeAuto(data: Uint8Array, targetVersion: 'v2.8' | 'v2.9' = 'v2.9'): { hash: string; hex: string; version: string } {
+  const strategy = targetVersion === 'v2.8' ? createHashStrategy('legacy') : createHashStrategy('modern');
+  return {
+    hash: strategy.hashHex(data),
+    hex: strategy.hashHex(data),
+    version: targetVersion,
+  };
+}
+
+/** B-03: 策略扩展 - 写入模式 */
+export interface WriteStrategy {
+  write(data: Uint8Array): Buffer;
+  version: 'v2.8' | 'v2.9';
+}
+
+/** B-03: v2.8 Legacy写入 */
+export class LegacyWriteStrategy implements WriteStrategy {
+  version: 'v2.8' | 'v2.9' = 'v2.8';
+  write(data: Uint8Array): Buffer {
+    return Buffer.from(createHash('md5').update(data).digest());
+  }
+}
+
+/** B-03: v2.9 Modern写入 */
+export class ModernWriteStrategy implements WriteStrategy {
+  version: 'v2.8' | 'v2.9' = 'v2.9';
+  write(data: Uint8Array): Buffer {
+    return blake3Hash(Buffer.from(data));
+  }
+}
+
+export default { 
+  createHashStrategy, 
+  detectVersion, 
+  crossVerify,
+  writeLegacy,
+  writeModern,
+  writeAuto,
+  LegacyWriteStrategy,
+  ModernWriteStrategy,
+};

@@ -1,0 +1,220 @@
+【饱和攻击头部】
+火力配置：1 Agent（Engineer - 地狱模式）
+轰炸目标：README.md硬核技术白皮书更新（v2.6.1→v2.9.0-A级认证版），零内部暗号，RFC标准，算法公式全覆盖
+输入基线：完整技术背景（见下文，零占位符）
+
+---
+
+【输入基线】（零占位符·完整技术背景）
+
+输入项	强制要求	验证命令	状态	
+当前README	`README.md`（v2.6.1版本，12KB）	`ls -lh README.md`	必须	
+项目版本	v2.9.0-ALGORITHM-HARDENED（A级认证）	读取ID-204	必须	
+新特性代码	WASM SIMD（407B）、BLAKE3（74行）、Pool（159行）	见ID-204第6节	必须	
+审计报告	211号审计A级/Go	`docs/audit report/task05/211-AUDIT-v2.9.0-FINAL.md`	必须	
+性能数据	3分钟压力测试、BLAKE3 vs MD5对比、WASM编译验证	见211号审计	必须	
+目标格式	ID-101硬核技术白皮书v2.0（零暗号、RFC引用、算法公式）	检查清单	必须	
+债务清偿	DEBT-v2.9.1-001/002/003全部清零	`docs/DEBT-v2.9.1-ARCHIVED.md`	必须	
+
+当前README关键章节（v2.6.1基线）：
+
+Chapter 1: Cascade Hash架构（SimHash-64 + MD5-128）
+Chapter 2: CDC（Rabin-Karp，固定窗口48字节）
+Chapter 3: SimHash LSH索引（16 bands, 4 rows）
+Chapter 4: W-TinyLFU缓存（SLRU双区）
+Chapter 5: HCTX文件格式（v2，MD5-128）
+Chapter 6: 性能评估（180 MB/s端到端，64MB内存）
+Chapter 7: API参考（TypeScript接口）
+Chapter 8: Hajimi-Code集成
+Chapter 9: 已知限制与未来工作（WASM待优化、RSS波动、平台差异）
+
+v2.9.0新特性技术细节（必须更新入README）：
+
+特性1：WASM SIMD SimHash优化
+
+```typescript
+// src/wasm/simhash-simd.wat - 407B产物
+// SIMD指令：i64x2.eq, i8x16.swizzle等12条
+// 性能：理论吞吐量≥500MB/s（SIMD并行popcount）
+// 降级路径：WASM失败时自动降级到JS（BigInt popcount）
+```
+
+特性2：BLAKE3替换MD5（加密升级）
+
+```typescript
+// src/crypto/blake3-wrapper.ts - 74行
+// 依赖：blake3-jit@1.0.0（WASM JIT编译）
+// 性能：比MD5快3-5倍，现代CPU上≥1GB/s
+// 安全性：256位碰撞抵抗 vs MD5 128位
+// 向后兼容：双模式策略工厂支持MD5 legacy
+```
+
+特性3：Buffer Pooling（RSS稳定）
+
+```typescript
+// src/utils/buffer-pool.ts - 159行
+// 池大小：1MB per chunker instance
+// 效果：RSS波动从45%降至<10%
+// 3分钟压力测试：28M+迭代，无内存泄漏
+```
+
+性能数据更新（v2.9.0实测）：
+
+指标	v2.6.1	v2.9.0	提升	
+端到端吞吐量	180 MB/s	520 MB/s (WASM)	2.9×	
+RSS波动	4-45%	<10% (Pool)	4.5×稳定	
+哈希计算	280 MB/s (MD5)	133 ops/ms (BLAKE3)	算法升级	
+内存效率	64MB	51MB (Pool)	20%节省	
+
+---
+
+【工单矩阵】（地狱精度）
+
+工单 README-01/01：v2.9.0硬核技术白皮书全面更新
+
+角色：Engineer（地狱模式）
+目标：将README.md从v2.6.1更新至v2.9.0-A级认证版，零内部暗号，硬核技术细节，八章强制结构
+输入：当前README.md（v2.6.1）+ ID-204技术资产 + 211号审计报告
+输出交付物：
+
+交付物1：更新后的README.md（v2.9.0）
+- 文件路径：`README.md`（替换现有文件）
+- 行数限制：≥1200行（硬核技术细节支撑）
+- 大小限制：≥35KB（深度技术内容）
+- 必须包含的正则：
+  - `v2\.9\.0-ALGORITHM-HARDENED`（版本号）
+  - `211号审计`或`Audit 211`（审计认证）
+  - `blake3-jit`（BLAKE3依赖）
+  - `i64x2\|i8x16\|SIMD`（WASM SIMD指令）
+  - `Buffer Pool\|buffer-pool`（Pool技术）
+  - `@debt\|DEBT-v2\.9\.1`（债务标记，诚实声明）
+  - `407 bytes\|407B`（WASM产物大小）
+  - `28,?000,?000\|28M`（Pool测试迭代数）
+
+交付物2：更新摘要文档
+- 文件路径：`docs/CHANGELOG-v2.6.1-to-v2.9.0.md`
+- 必须包含：
+  - 变更列表（WASM/BLAKE3/Pool三特性）
+  - 性能对比表格（v2.6.1 vs v2.9.0）
+  - 债务清偿记录（DEBT-001/002/003）
+  - 审计认证记录（211号A级）
+
+八章强制结构更新要求：
+
+【第一章】System Architecture（更新）
+- 必须包含：Cascade Hash v2.9.0架构图（WASM+BLAKE3+Pool三层）
+- 必须更新：安全分析表格（MD5→BLAKE3，256位碰撞抵抗）
+- 必须添加：WASM SIMD加速层在架构中的位置
+
+【第二章】Core Algorithm Implementation（重大更新）
+- 2.1 WASM SIMD SimHash（新增章节）
+  - WebAssembly Linear Memory布局
+  - SIMD指令集使用（i64x2.eq, i8x16.swizzle）
+  - 降级路径设计（WASM失败→JS BigInt）
+  - 性能公式：吞吐量 = (N × SIMD_WIDTH) / T_cycles
+
+- 2.2 BLAKE3 Cascade Hash（替换原MD5章节）
+  - BLAKE3算法公式（RFC draft-blake3-04）
+  - 与MD5性能对比（≥3×速度提升）
+  - 双模式策略工厂（兼容v2.8 legacy）
+  - 债务标记：`// @debt BLAKE3-v2.9.1-001: 已清偿`
+
+- 2.3 Buffer Pooling（新增章节）
+  - 内存池设计（1MB per instance）
+  - 分配/回收算法（O(1) amortized）
+  - RSS稳定性证明（3分钟28M+迭代数据）
+
+【第三章】Protocol Specification（更新）
+- HCTX格式更新：支持BLAKE3-256（新增HashType 0x03）
+- 版本兼容性说明（v2.8→v2.9无损升级）
+
+【第四章】Performance Evaluation（数据全面更新）
+- 必须包含：v2.9.0实测数据表格（vs v2.6.1对比）
+- 必须包含：3分钟压力测试RSS曲线（Pool效果）
+- 必须包含：WASM vs JS吞吐量对比（SIMD加速比）
+- 必须包含：BLAKE3 vs MD5延迟对比
+
+【第五章】API Reference（更新）
+- 新增：`Blake3Wrapper`接口定义
+- 新增：`BufferPool`接口定义
+- 新增：`SimHashWasmLoader`接口定义
+- 更新：配置参数（新增`useWasm`, `poolSize`）
+
+【第六章】Implementation Details（新增技术细节）
+- WASM编译流程（wat→wasm，wabt工具链）
+- BLAKE3 JIT编译机制（WASM运行时生成）
+- Pool内存布局（Buffer slab allocation）
+
+【第七章】Known Limitations & Future Work（诚实更新）
+- 移除已解决限制：
+  - WASM Optimization Pending → 已解决（407B SIMD产物）
+  - Memory Variance → 已解决（Pool稳定<10%）
+- 保留限制：
+  - 平台差异（Windows 2×延迟）
+  - Termux WASM SIMD运行时限制（环境限制，非代码）
+- 更新Roadmap：
+  - Phase 1（已完成）：标记为✅（WASM/BLAKE3/Pool）
+  - Phase 2（进行中）：Persistent LSH index
+  - Phase 3（规划中）：Hajimi-Code插件API
+
+【第八章】Appendix（更新）
+- 参考文献：新增BLAKE3 RFC draft、WASM SIMD规范
+- 术语表：新增WASM、SIMD、BLAKE3、Buffer Pool
+
+《刀刃》风险自测表（16项）：
+
+类别	编号	自测项	验证命令（可复制）	通过标准	状态	
+FUNC	001	版本号更新	`grep "v2.9.0" README.md`	命中	[ ]	
+FUNC	002	审计认证提及	`grep "211" README.md`	命中	[ ]	
+FUNC	003	WASM章节存在	`grep -c "WASM\|WebAssembly" README.md`	≥5处	[ ]	
+FUNC	004	BLAKE3章节存在	`grep -c "BLAKE3\|blake3" README.md`	≥10处	[ ]	
+FUNC	005	Pool章节存在	`grep -c "Buffer Pool\|buffer-pool" README.md`	≥5处	[ ]	
+CONST	001	行数≥1200	`wc -l README.md`	≥1200	[ ]	
+CONST	002	大小≥35KB	`ls -lh README.md`	≥35K	[ ]	
+CONST	003	八章结构完整	`grep -c "^## Chapter [1-8]" README.md`	8	[ ]	
+NEG	001	零内部暗号	`grep -E "客服小祥	黄瓜睦	唐音	
+NEG	002	无ID-XXX引用	`grep "ID-[0-9]\+" README.md`	返回空	[ ]	
+NEG	003	旧MD5章节移除	`grep "MD5-128" README.md`	仅提及legacy兼容	[ ]	
+NEG	004	已解决限制诚实移除	`grep "WASM Optimization Pending" README.md`	返回空（已解决）	[ ]	
+E2E	001	性能表格可验证	`grep "520 MB/s\|180 MB/s" README.md`	命中	[ ]	
+E2E	002	债务诚实声明	`grep "@debt\|DEBT-v2.9.1" README.md`	命中	[ ]	
+E2E	003	向后兼容说明	`grep "向后兼容\|backward compat" README.md`	命中	[ ]	
+High	001	RFC引用完整	`grep -c "RFC\|draft-" README.md`	≥3处	[ ]	
+High	002	算法公式存在	`grep -c "\`\`\`typescript\|公式\|=" README.md`	≥10处	[ ]
+
+
+地狱收卷红线（10项硬性否决）： 违反任一项即返工/失败：
+1. 
+RED-001：行数<1200或大小<35KB → 失败
+2. 
+RED-002：缺少WASM/BLAKE3/Pool任一章节 → 失败
+3. 
+RED-003：存在内部暗号（七权人格/Ouroboros等）→ 失败
+4. 
+RED-004：版本号仍为v2.6.1 → 失败
+5. 
+RED-005：未提及211号审计A级认证 → 失败
+6. 
+RED-006："WASM Optimization Pending"未移除 → 失败
+7. 
+RED-007：无性能对比表格（v2.6.1 vs v2.9.0）→ 失败
+8. 
+RED-008：无债务诚实声明（@debt或DEBT归档）→ 失败
+9. 
+RED-009：八章结构缺失 → 失败
+10. 
+RED-010：存在不可验证的性能断言（无数据支撑）→ 失败
+
+【P4自测轻量检查表】（配合模块）
+
+检查点	自检问题	覆盖情况	相关用例ID	备注	
+核心功能	WASM/BLAKE3/Pool三章是否完整？	[ ]	FUNC-003005		
+约束回归	v2.6.1旧内容是否正确移除/更新？	[ ]	NEG-003004		
+负面路径	降级路径/兼容性/限制诚实声明？	[ ]	E2E-002003		
+用户体验	性能对比表格是否清晰？	[ ]	E2E-001		
+端到端	八章结构是否完整？	[ ]	CONST-003		
+高风险	零内部暗号/RFC引用/算法公式？	[ ]	NEG-001, High-001002		
+字段完整	16项刀刃是否全部勾选？	[ ]	本表16项		
+映射正确	是否关联ID-204技术资产？	[ ]	输入基线		
+执行处理	是否有Fail项未处理？	[ ]	必须全绿		
+债务诚实	是否声明已解决债务（DEBT-001/002/003）？	[ ]	E2E-002

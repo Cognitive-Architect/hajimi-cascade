@@ -1,0 +1,240 @@
+---
+
+🔥 饱和攻击派单（ID-59 v2.0 地狱难度） —— 213号战役：v2.9.1 四债清零大总攻
+
+---
+
+【饱和攻击头部】
+
+火力配置：4 Agent 串行链式攻击（Engineer - 地狱模式）
+
+轰炸目标：4项剩余技术债务全量清偿 → v2.9.1-A级认证 → README Chapter 7全绿
+
+输入基线：完整技术背景（见下文，零占位符）
+
+---
+
+【输入基线】（零占位符·完整技术背景）
+
+输入项	强制要求	验证命令	状态	
+Git坐标	`main`分支 @ commit `fe0f178` (v2.9.0-ALGORITHM-HARDENED)	`git rev-parse HEAD`	必须	
+父基线	212号审计报告 B级结论（4/7清偿，2项C级）	读取 `audit report/task05/212-DEBT-RECONCILE-AUDIT.md`	必须	
+代码基线	`src/cdc/chunker-pooled.ts` 第9行 windowSize: 48（固定值）	`sed -n '9p' src/cdc/chunker-pooled.ts`	必须	
+代码基线	`src/security/input-sandbox.ts` 仅压缩比检测	`grep -A5 "detectZipBomb" src/security/input-sandbox.ts`	必须	
+代码基线	`src/crypto/hash-factory.ts` 无legacy写入HCTX v2.8	`grep "write\|HCTX" src/crypto/hash-factory.ts`	必须	
+CI配置	`.github/workflows/hardened-ci.yml` Windows runner存在	`grep -A3 "test-windows:" .github/workflows/hardened-ci.yml`	必须	
+债务清单	4项待清偿（Adaptive CDC/zip bomb格式/legacy写入/CI文档）	见212号审计	必须	
+验收红线	4项验证全部通过（V1-V4）	可复制执行	必须	
+
+---
+
+【工单矩阵】（地狱精度·串行链）
+
+工单 B-01/04：Adaptive CDC动态窗口（算法核心攻坚）
+
+角色：Engineer（唐音 - 地狱模式）
+
+目标：实现真正的Adaptive CDC，窗口大小根据内容熵自适应调整（8-64字节范围），取代固定48字节
+
+输入：`src/cdc/chunker-pooled.ts` 当前固定windowSize实现 + 212号审计C级判定
+
+输出交付物：
+
+交付物1：Adaptive CDC核心模块（adaptive-chunker.ts）
+- 文件路径：`src/cdc/adaptive-chunker.ts`
+- 行数限制：200行±15行
+- 必须包含的正则：
+  - `entropy`（熵计算函数）
+  - `windowSize.*8\|windowSize.*64`（动态范围边界）
+  - `adaptive.*window\|dynamic.*window`（自适应逻辑）
+  - `calculateEntropy\|computeEntropy`（熵计算函数名）
+- 禁止包含：`windowSize.*=.*48`（硬编码固定值）
+
+交付物2：熵计算工具（entropy.ts）
+- 文件路径：`src/utils/entropy.ts`
+- 行数限制：80行±8行
+- 必须包含的正则：
+  - `shannon\|entropy\|byteFrequency`（香农熵或字节频率）
+  - `Math.log2\|Math.log`（对数计算）
+  - `export.*calculateEntropy`（导出函数）
+
+交付物3：集成修改（chunker-pooled.ts更新）
+- 文件路径：`src/cdc/chunker-pooled.ts`（修改，非新建）
+- 必须包含的正则：
+  - `import.*adaptive\|AdaptiveChunker`（引入新模块）
+  - `windowSize.*adaptive\|getAdaptiveWindow`（调用自适应逻辑）
+- 禁止包含：`windowSize.*48`（旧固定值必须删除）
+
+《刀刃》风险自测表（16项）：
+
+类别	编号	自测项	验证命令（可复制）	通过标准	状态	
+FUNC	001	低熵内容（重复字节）窗口缩小至8字节	`grep -E "entropy.<.0.3	low.entropy.8" src/cdc/adaptive-chunker.ts`	命中	
+FUNC	002	高熵内容（随机数据）窗口扩大至64字节	`grep -E "entropy.>.0.7	high.entropy.64" src/cdc/adaptive-chunker.ts`	命中	
+FUNC	003	熵计算函数输出范围[0,1]	`grep -A5 "calculateEntropy" src/utils/entropy.ts \| grep "return"`	返回归一化值	[ ]	
+FUNC	004	自适应切换无断点（连续过渡）	`grep "lerp\|linear.*interpolat\|smooth" src/cdc/adaptive-chunker.ts`	命中过渡函数	[ ]	
+CONST	001	最小窗口8字节边界保护	`grep "MIN_WINDOW.*8\|min.*8" src/cdc/adaptive-chunker.ts`	命中	[ ]	
+CONST	002	最大窗口64字节边界保护	`grep "MAX_WINDOW.*64\|max.*64" src/cdc/adaptive-chunker.ts`	命中	[ ]	
+CONST	003	窗口大小为2的幂次（对齐优化）	`grep "& (windowSize - 1)\|power.*of.*2" src/cdc/adaptive-chunker.ts`	命中对齐检查	[ ]	
+NEG	001	空输入熵计算返回0	`test/entropy.test.ts` 空Buffer测试	通过	[ ]	
+NEG	002	极大输入（10MB）熵计算不溢出	`test/entropy.test.ts` 大Buffer测试	通过	[ ]	
+NEG	003	窗口大小越界自动clamp	`test/adaptive-chunker.test.ts` 边界测试	8≤window≤64	[ ]	
+NEG	004	固定窗口48字节已删除	`grep -c "windowSize.*=.*48" src/cdc/chunker-pooled.ts`	输出0	[ ]	
+E2E	001	端到端：重复内容（低熵）分块速度提升	`npm test -- adaptive.e2e.test.ts`	速度>固定窗口	[ ]	
+E2E	002	端到端：随机内容（高熵）分块质量提升	分块边界熵值方差<阈值	通过	[ ]	
+E2E	003	端到端：混合内容自适应平滑过渡	监控窗口大小变化曲线	无突变	[ ]	
+High	001	性能退化<5%（vs固定48字节）	`npm run bench` 对比测试	吞吐量≥95%基线	[ ]	
+High	002	向后兼容：旧配置自动转为自适应模式	`grep "legacy.*48\|migrate.*48" src/cdc/adaptive-chunker.ts`	命中兼容逻辑	[ ]	
+
+地狱收卷红线（10项硬性否决）：
+违反任一项即返工/失败：
+1. RED-001：无熵计算函数或熵值不归一化[0,1]
+2. RED-002：窗口范围超出8-64字节或未clamp
+3. RED-003：固定48字节硬编码未删除
+4. RED-004：性能退化>5%（vs固定窗口基线）
+5. RED-005：无向后兼容路径（旧数据损坏）
+6. RED-006：无平滑过渡（窗口突变导致分块不一致）
+7. RED-007：熵计算未处理空/极大输入边界
+8. RED-008：单元测试覆盖率<90%
+9. RED-009：未提供性能对比报告（固定vs自适应）
+10. RED-010：隐瞒债务（声称实现但实际无自适应逻辑）
+
+---
+
+工单 B-02/04：zip bomb多格式支持（安全加固）
+
+角色：Engineer（唐音 - 地狱模式）
+
+目标：实现gzip/bzip2/zlib格式识别+压缩比检测，取代单一压缩比阈值
+
+输入：`src/security/input-sandbox.ts` 当前仅压缩比检测实现 + 212号审计C级判定
+
+依赖：B-01/04完成（串行）
+
+输出交付物：
+
+交付物1：多格式检测器（format-detector.ts）
+- 文件路径：`src/security/format-detector.ts`
+- 行数限制：120行±10行
+- 必须包含的正则：
+  - `0x1f8b.*gzip\|gzip.*0x1f8b`（gzip magic）
+  - `0x425a.*bzip2\|bzip2.*0x425a`（bzip2 magic）
+  - `0x78.*zlib\|zlib.*0x78`（zlib magic）
+  - `detectFormat\|getCompressionFormat`（检测函数）
+
+交付物2：更新zip bomb检测（input-sandbox.ts）
+- 文件路径：`src/security/input-sandbox.ts`（修改）
+- 行数限制：新增50行±5行
+- 必须包含的正则：
+  - `import.*format-detector`（引入格式检测）
+  - `detectFormat.*compressed`（调用格式检测）
+  - `format.*specific.*limit\|per.*format`（格式特定限制）
+- 禁止包含：仅`uncompressed / compressed > limit`（旧逻辑必须扩展）
+
+交付物3：格式特定限制配置
+- 文件路径：`src/security/sandbox-limits.ts`（新建或修改）
+- 必须包含的正则：
+  - `gzip.*limit\|bzip2.*limit\|zlib.*limit`（格式特定阈值）
+  - `CompressionFormat.*enum`（格式枚举）
+
+《刀刃》风险自测表（16项）：
+
+类别	编号	自测项	验证命令（可复制）	通过标准	状态	
+FUNC	001	gzip格式检测（0x1f8b）	`echo -n $'\x1f\x8b' \| xxd` 输入检测器	返回gzip	[ ]	
+FUNC	002	bzip2格式检测（0x425a）	`echo -n $'BZ' \| xxd` 输入检测器	返回bzip2	[ ]	
+FUNC	003	zlib格式检测（0x78xx）	`echo -n $'\x78\x9c' \| xxd` 输入检测器	返回zlib	[ ]	
+FUNC	004	未知格式fallback到通用压缩比	`echo "unknown" \| detectFormat`	返回unknown	[ ]	
+CONST	001	gzip限制100:1	`grep "gzip.*100\|GZIP_LIMIT" src/security/sandbox-limits.ts`	命中	[ ]	
+CONST	002	bzip2限制50:1（更严格）	`grep "bzip2.*50\|BZIP2_LIMIT" src/security/sandbox-limits.ts`	命中	[ ]	
+CONST	003	zlib限制80:1	`grep "zlib.*80\|ZLIB_LIMIT" src/security/sandbox-limits.ts`	命中	[ ]	
+NEG	001	伪造magic字节（0x1f8b+随机）不触发gzip路径	变异测试	拒绝或fallback	[ ]	
+NEG	002	截断输入（<2字节）安全处理	`detectFormat(Buffer.alloc(1))`	不抛错	[ ]	
+NEG	003	超大文件（>100MB）格式检测内存安全	大文件测试	流式处理	[ ]	
+NEG	004	旧版仅压缩比检测仍兼容	`detectZipBomb(oldData)`	仍工作	[ ]	
+E2E	001	gzip炸弹检测（1000:1压缩比）	`test/zip-bomb-gzip.test.ts`	触发警报	[ ]	
+E2E	002	bzip2炸弹检测	`test/zip-bomb-bzip2.test.ts`	触发警报	[ ]	
+E2E	003	正常压缩文件不误报	正常zip通过	无警报	[ ]	
+High	001	所有格式检测时间<1ms	性能测试	平均<1ms	[ ]	
+High	002	无正则表达式拒绝服务（ReDoS）风险	代码审查	无危险正则	[ ]
+
+地狱收卷红线（10项硬性否决）：
+1. 
+RED-001：任一格式的magic字节检测失败
+2. 
+RED-002：无格式特定阈值（仍用通用100:1）
+3. 
+RED-003：旧版压缩比检测被破坏（不兼容）
+4. 
+RED-004：检测时间>10ms（性能 unacceptable）
+5. 
+RED-005：截断/畸形输入导致崩溃
+6. 
+RED-006：伪造magic字节可绕过检测
+7. 
+RED-007：无单元测试覆盖3种格式
+8. 
+RED-008：误报率>1%（正常文件被拦）
+9. 
+RED-009：内存泄漏（大文件检测后RSS增长>10%）
+10. 
+RED-010：隐瞒债务（声称支持某格式但实际未实现）
+
+工单 B-03/04：BLAKE3 Legacy写入模式（兼容性补完）
+角色：Engineer（唐音 - 地狱模式）
+目标：实现HCTX v2.8格式写入（MD5哈希），当前仅支持读取v2.8
+输入： src/crypto/hash-factory.ts  当前仅read-compatible + 212号审计B级判定
+依赖：B-02/04完成（串行）
+输出交付物：
+交付物1：Legacy写入策略（legacy-writer.ts）
+ 
+文件路径： src/format/legacy-writer.ts 
+ 
+行数限制：100行±10行
+ 
+必须包含的正则：
+ 
+ writeHctxV2_8\|writeLegacyFormat （v2.8写入函数）
+ 
+ HashType.*MD5\|md5.*legacy （MD5哈希使用）
+ 
+ hctx.*v2\.8\|HCTX_V2_8 （版本标记）
+ 
+ 交付物2：Hash工厂扩展（hash-factory.ts更新）
+ 
+文件路径： src/crypto/hash-factory.ts （修改）
+ 
+必须包含的正则：
+ 
+ write.*legacy\|export.*v2_8 （新增写入方法）
+ 
+ strategy.*legacy.*write （策略模式扩展）
+ 
+禁止包含：仅 detectVersion 读取逻辑（必须扩展写入）
+交付物3：双模式集成测试
+ 
+文件路径： test/dual-mode-write.test.ts 
+ 
+必须包含的正则：
+ 
+ write.*v2_8.*read.*v2_9\|roundtrip （v2.8写入v2.9读取）
+ 
+ write.*v2_9.*read.*v2_8\|backward.*compatible （反向兼容）
+ 
+《刀刃》风险自测表（16项）：
+
+类别	编号	自测项	验证命令（可复制）	通过标准	状态	
+FUNC	001	v2.8格式写入（MD5+32字节header）	`writeLegacyFormat(data)` 输出检查	header=0x02	[ ]	
+FUNC	002	v2.9格式写入（BLAKE3+48字节header）	`writeModernFormat(data)` 输出检查	header=0x03	[ ]	
+FUNC	003	自动检测目标版本写入	`writeAuto(data, version)`	根据version切换	[ ]	
+FUNC	004	MD5哈希正确性（vs crypto.createHash）	对比测试	哈希一致	[ ]	
+CONST	001	v2.8 header魔术字0x48435802	`grep "0x48435802\|HCTX_V2_8_MAGIC" src/format/legacy-writer.ts`	命中	[ ]	
+CONST	002	v2.8 chunk entry 32字节对齐	`grep "32.*byte\|entry.*size" src/format/legacy-writer.ts`	命中	[ ]	
+CONST	003	SimHash-64不变（v2.8/v2.9相同）	代码审查	使用相同函数	[ ]	
+NEG	001	写入v2.8后v2.9能读取	`roundtrip.test.ts`	数据一致	[ ]	
+NEG	002	写入v2.9后v2.8不能读取（预期失败）	负向测试	优雅失败	[ ]	
+NEG	003	空数据写入不崩溃	`writeLegacyFormat(Buffer.alloc(0))`	不抛错	[ ]	
+NEG	004	超大chunk（>64KB）分块写入	大chunk测试	正确处理	[ ]	
+E2E	001	v2.9读取v2.8文件（已有功能回归）	`npm test -- legacy-read.test.ts`	通过	[ ]	
+E2E	002	v2.8写入+v2.9读取roundtrip	新测试	数据无损	[ ]	
+E2E	003	CLI工具--legacy标志工作	`hajimi compress --legacy input`	输出v2.8格式	[ ]	
+High	001	写入性能vs v2.9无退化	`npm run bench` 对比	<5%差异	[ ]	
+High	002	无MD5哈希冲突（生日攻击风险）	文档声明	风险接受	[ ]

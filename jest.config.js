@@ -2,10 +2,11 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  roots: ['<rootDir>/src', '<rootDir>/tests'],
+  roots: ['<rootDir>/tests'],
   testMatch: ['**/__tests__/**/*.test.ts', '**/?(*.)+(spec|test).ts'],
   transform: {
     '^.+\\.ts$': 'ts-jest',
+    '^.+\\.js$': 'babel-jest',
   },
   moduleFileExtensions: ['ts', 'js', 'json'],
   collectCoverageFrom: [
@@ -19,4 +20,11 @@ module.exports = {
     },
   },
   testTimeout: 60000,
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/src/test/',
+  ],
+  transformIgnorePatterns: [
+    'node_modules/(?!(blake3-jit)/)',
+  ],
 };

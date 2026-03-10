@@ -1,0 +1,112 @@
+name: Hardened CI
+
+on:
+  push:
+    branches: [master, main, feat/*, fix/*]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  # Linux + Node 18/20 矩阵测试
+  test-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Test with Coverage
+        run: npm test -- --coverage --coverageReporters=json-summary
+        env:
+          NODE_OPTIONS: --max-old-space-size=512
+      - name: Coverage Gate (≥80%)
+        run: |
+          COVERAGE=$(cat coverage/coverage-summary.json | jq -r '.total.lines.pct')
+          echo "Coverage: ${COVERAGE}%"
+          if (( $(echo "$COVERAGE < 80" | bc -l) )); then
+            echo "❌ Coverage below 80%"
+            exit 1
+          fi
+          echo "✅ Coverage gate passed"
+      - name: Upload Coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-linux-node${{ matrix.node-version }}
+          path: coverage/
+
+  # Windows测试
+  test-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+        env:
+          NODE_OPTIONS: --max-old-space-size=512
+
+  # 性能回归检测
+  perf-regression:
+    needs: [test-linux]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Download baseline
+        uses: actions/download-artifact@v4
+        with:
+          name: perf-baseline
+          path: baseline/
+        continue-on-error: true
+      - name: Run Performance Test
+        run: |
+          npm run benchmark > perf-current.txt 2>&1 || true
+          cat perf-current.txt
+      - name: Regression Gate (10% threshold)
+        run: |
+          node scripts/ci/regression-gate.mjs baseline/perf-baseline.json perf-current.txt
+      - name: Upload Performance Result
+        uses: actions/upload-artifact@v4
+        with:
+          name: perf-baseline
+          path: perf-current.txt
+          overwrite: true
+
+  # 跨平台路径测试
+  cross-platform:
+    needs: [test-linux, test-windows]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run build
+      - name: Platform Adapter Test
+        run: |
+          node -e "
+          const { getPathSeparator, normalizePath } = require('./dist/utils/platform-adapter');
+          console.log('OS:', process.platform);
+          console.log('Separator:', getPathSeparator());
+          console.log('Normalized:', normalizePath('test/path/file.txt'));
+          "

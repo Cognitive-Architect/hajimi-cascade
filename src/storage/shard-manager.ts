@@ -61,6 +61,7 @@ export class ShardIndex {
 export class ShardManager {
   private config: ShardConfig;
   private index = new ShardIndex();
+  private shardData = new Map<number, Map<string, VectorEntry>>(); // shardId -> (vectorId -> entry)
   private shardCache = new Map<number, VectorEntry[]>();
   private accessOrder: number[] = [];
 
@@ -74,11 +75,9 @@ export class ShardManager {
   }
 
   private loadShard(shardId: number): VectorEntry[] {
-    const size = this.index.getShardSize(shardId);
-    return Array.from({ length: size }, (_, i) => ({
-      id: `shard${shardId}_vec${i}`,
-      data: new Float32Array(768),
-    }));
+    const shardMap = this.shardData.get(shardId);
+    if (!shardMap) return [];
+    return Array.from(shardMap.values());
   }
 
   private getShard(shardId: number): VectorEntry[] {
@@ -112,7 +111,14 @@ export class ShardManager {
 
   addVector(vector: VectorEntry): void {
     const shardId = this.getShardId(vector.id);
-    this.index.add({ vectorId: vector.id, shardId, offset: this.index.getShardSize(shardId) });
+    const offset = this.index.getShardSize(shardId);
+    this.index.add({ vectorId: vector.id, shardId, offset });
+    
+    // Store actual vector data
+    if (!this.shardData.has(shardId)) {
+      this.shardData.set(shardId, new Map());
+    }
+    this.shardData.get(shardId)!.set(vector.id, vector);
   }
 
   addBatch(vectors: VectorEntry[]): void {
@@ -122,20 +128,36 @@ export class ShardManager {
   findVector(vectorId: string): VectorEntry | undefined {
     const entry = this.index.find(vectorId);
     if (!entry) return undefined;
-    const shard = this.getShard(entry.shardId);
-    return shard[entry.offset];
+    const shardMap = this.shardData.get(entry.shardId);
+    if (!shardMap) return undefined;
+    return shardMap.get(vectorId);
   }
+
+  private startupTime?: number;
 
   startup(): { durationMs: number } {
-    return { durationMs: Date.now() - Date.now() }; // 只加载索引，延迟加载数据
+    const start = Date.now();
+    
+    // 预热：加载前N个分片到缓存
+    const preloadCount = Math.min(3, this.config.shardCount);
+    for (let shardId = 0; shardId < preloadCount; shardId++) {
+      if (this.index.getShardSize(shardId) > 0) {
+        this.getShard(shardId);
+      }
+    }
+    
+    const duration = Date.now() - start;
+    this.startupTime = duration;
+    return { durationMs: duration };
   }
 
-  getStats(): { totalVectors: number; cachedShards: number; memoryMB: number } {
+  getStats(): { totalVectors: number; cachedShards: number; memoryMB: number; startupTimeMs?: number } {
     const cached = this.shardCache.size;
     return {
       totalVectors: this.index.size(),
       cachedShards: cached,
       memoryMB: Math.floor((this.index.size() * 100) / (1024 * 1024) + cached * 50),
+      startupTimeMs: this.startupTime,
     };
   }
 }

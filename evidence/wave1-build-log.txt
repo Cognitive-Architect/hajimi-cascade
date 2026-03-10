@@ -1,0 +1,14 @@
+=== Wave 1 Build Log ===
+Timestamp: 2026-03-09T03:30:57+08:00
+
+Build Command: tsc
+Result: SUCCESS (0 errors)
+
+Output Files:
+-rw-------. 1 u0_a596 u0_a596 1703 Mar  9 03:05 dist/src/storage/zstd-compression.d.ts
+-rw-------. 1 u0_a596 u0_a596 1002 Mar  9 03:05 dist/src/storage/zstd-compression.d.ts.map
+-rw-------. 1 u0_a596 u0_a596 4569 Mar  9 03:05 dist/src/storage/zstd-compression.js
+-rw-------. 1 u0_a596 u0_a596 2360 Mar  9 03:05 dist/src/storage/zstd-compression.js.map
+
+Type Check: tsc --noEmit
+Result: PASS (exit 0)
